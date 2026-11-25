@@ -1,0 +1,368 @@
+/* =========================================================
+   css/phase3.css — 3D 탈출 게임 화면 (담당: A)
+   클래스 이름은 p3- 로 시작
+   ========================================================= */
+#phase3-root canvas { display: block; }
+
+/* 화면 중앙 조준점 */
+.p3-crosshair {
+  position: absolute; left: 50%; top: 50%;
+  width: 6px; height: 6px; margin: -3px 0 0 -3px;
+  border-radius: 50%; background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 3px #000; pointer-events: none; z-index: 5;
+}
+
+/* 왼쪽 아래 조작 안내 */
+.p3-hint {
+  position: absolute; left: 14px; bottom: 12px; z-index: 5;
+  font-size: 13px; color: rgba(255, 255, 255, 0.5); pointer-events: none;
+}
+
+/* 시작 / 일시정지 화면 */
+.p3-overlay {
+  position: absolute; inset: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0, 0, 0, 0.72); cursor: pointer;
+}
+.p3-box {
+  min-width: 340px; padding: 28px 36px; text-align: center; line-height: 1.6;
+  background: rgba(14, 14, 14, 0.94); border: 1px solid #444;
+}
+.p3-title { font-size: 28px; font-weight: bold; color: #e8d8a8; letter-spacing: 2px; }
+.p3-msg { color: #ccc; margin: 6px 0 16px; }
+.p3-keys { margin: 0 auto 16px; border-collapse: collapse; font-size: 14px; color: #bbb; }
+.p3-keys td { padding: 3px 10px; text-align: left; }
+.p3-keys kbd {
+  display: inline-block; min-width: 22px; margin-right: 3px; padding: 1px 5px;
+  border: 1px solid #666; border-radius: 3px; background: #222; color: #eee;
+  font-family: monospace; text-align: center;
+}
+.p3-sens { font-size: 14px; color: #bbb; cursor: default; }
+.p3-sens input { vertical-align: middle; margin: 0 6px; }
+.p3-tmp { margin-top: 16px; padding-top: 10px; border-top: 1px dashed #555; font-size: 13px; color: #888; }
+.p3-tmp button, .p3-box > button { margin: 6px 4px 0; padding: 6px 12px; cursor: pointer; }
+.p3-gameover { font-size: 36px; font-weight: bold; color: #f44; margin-bottom: 10px; }
+
+/* [E] 조사 안내 (조준점 아래) */
+.p3-prompt {
+  position: absolute; left: 50%; top: calc(50% + 28px); transform: translateX(-50%);
+  z-index: 6; padding: 4px 12px; font-size: 16px; color: #fff;
+  background: rgba(0, 0, 0, 0.55); border-radius: 3px; pointer-events: none; white-space: nowrap;
+}
+
+/* 잠깐 뜨는 메시지 (아래쪽) */
+.p3-toast {
+  position: absolute; left: 50%; bottom: 70px; transform: translateX(-50%);
+  z-index: 6; max-width: 80vw; padding: 10px 18px; font-size: 16px; color: #f0e6c8;
+  background: rgba(10, 10, 10, 0.8); border-left: 3px solid #a01818; pointer-events: none;
+}
+
+/* 오른쪽 위 진행 상황 */
+.p3-hud {
+  position: absolute; right: 16px; top: 14px; z-index: 6; padding: 8px 12px;
+  font-size: 14px; color: #ccc; background: rgba(0, 0, 0, 0.45); pointer-events: none; line-height: 1.9;
+}
+.p3-digit {
+  display: inline-block; width: 22px; margin-left: 4px; text-align: center;
+  border: 1px solid #666; background: #111; color: #e8d8a8; font-family: monospace; font-weight: bold;
+}
+.p3-hud-key { color: #777; }
+.p3-hud-key.p3-on { color: #e8c547; }
+
+/* 성적표 보기 / 번호키 창 */
+.p3-panel {
+  position: absolute; inset: 0; z-index: 15;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+}
+.p3-sheet-view { height: 78vh; width: auto; box-shadow: 0 0 30px #000; }
+.p3-panel-tip { margin-top: 10px; font-size: 14px; color: #aaa; }
+.p3-panel-msg { margin-top: 12px; font-size: 16px; color: #ddd; }
+.p3-keypad {
+  padding: 24px 34px; text-align: center; background: #1a1a1a;
+  border: 3px solid #555; border-radius: 6px; box-shadow: 0 0 24px #000;
+}
+.p3-keypad-title { font-size: 18px; color: #9c9; letter-spacing: 4px; }
+.p3-slots { margin-top: 12px; }
+.p3-slot {
+  display: inline-block; width: 46px; height: 58px; margin: 0 5px; line-height: 58px;
+  font: bold 34px monospace; color: #7f7; background: #061006; border: 2px solid #2a4a2a;
+}
+.p3-keypad.p3-ok .p3-slot { color: #fff; border-color: #6c6; }
+.p3-keypad.p3-wrong .p3-slot { color: #f55; border-color: #a33; }
+.p3-keypad.p3-wrong { animation: p3-shake 0.35s; }
+@keyframes p3-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-10px); } 40% { transform: translateX(10px); }
+  60% { transform: translateX(-6px); }  80% { transform: translateX(6px); }
+}
+
+/* 교수에게 잡혔을 때 화면 왜곡 (피 없이) */
+#phase3-root.p3-distort canvas { animation: p3-distort 1.4s ease-in forwards; }
+@keyframes p3-distort {
+  0%   { filter: none; transform: none; }
+  15%  { filter: contrast(1.6) hue-rotate(-30deg); transform: scale(1.04) skewX(3deg); }
+  30%  { filter: invert(1) contrast(2); transform: scale(1.08) skewX(-6deg) translateX(12px); }
+  45%  { filter: grayscale(1) contrast(3) blur(1px); transform: scale(1.02) skewY(4deg) translateX(-10px); }
+  60%  { filter: invert(1) hue-rotate(90deg); transform: scale(1.12) skewX(8deg); }
+  80%  { filter: contrast(4) brightness(0.6) blur(2px); transform: scale(1.2) rotate(-2deg); }
+  100% { filter: brightness(0); transform: scale(1.3) rotate(3deg); }
+}
+
+/* 히든 영상 "녹화 테이프" (js/cutscene.js) — 디자인 방향(docs/10) 스타일 */
+.p3-cs-root {
+  position: fixed; inset: 0; z-index: 95; background: #000;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--fc-font);
+}
+.p3-cs-canvas {
+  width: min(100vw, 177.7vh); height: auto; aspect-ratio: 16 / 9;
+  image-rendering: pixelated;            /* 확대해도 또렷한 픽셀 */
+}
+.p3-cs-scan {                            /* 주사선 + 가장자리 어둡게 */
+  position: absolute; inset: 0; pointer-events: none; opacity: 0.35;
+  background: repeating-linear-gradient(to bottom, rgba(0,0,0,0.10) 0 1px, transparent 1px 3px);
+}
+.p3-cs-dark .p3-cs-scan { opacity: 0.9; box-shadow: inset 0 0 140px rgba(0,0,0,0.85); }
+
+/* ● REC 배지 (ON AIR 배지 스타일) + 날짜·장소 */
+.p3-cs-rec {
+  position: absolute; top: 18px; right: 24px; padding: 2px 10px;
+  font-weight: bold; font-size: 16px; letter-spacing: 2px; color: #fff;
+  background: var(--fc-red); border: 3px solid var(--fc-ink); box-shadow: var(--fc-shadow) var(--fc-ink);
+  animation: p3-cs-blink 1.4s steps(1) infinite;
+}
+@keyframes p3-cs-blink { 50% { opacity: 0.35; } }
+.p3-cs-label {
+  position: absolute; top: 18px; left: 24px; padding: 2px 10px; font-size: 15px; font-weight: bold;
+  color: var(--fc-ink); background: var(--fc-panel); border: 3px solid var(--fc-ink); box-shadow: var(--fc-shadow) var(--fc-ink);
+}
+.p3-cs-dark .p3-cs-label { color: var(--fc-dk-ink); background: var(--fc-dk-panel); border-color: #000; box-shadow: var(--fc-shadow) #000; }
+.p3-cs-dark .p3-cs-rec { background: var(--fc-dk-accent); border-color: #000; box-shadow: var(--fc-shadow) #000; }
+
+/* 자막 = 대화창 (이름표 + 타자 효과) */
+.p3-cs-sub {
+  position: absolute; left: 50%; bottom: 5vh; transform: translateX(-50%);
+  width: min(86vw, 900px); min-height: 92px; padding: 12px 18px 14px;
+  color: var(--fc-ink); background: var(--fc-panel);
+  border: 4px solid var(--fc-ink); border-radius: 6px; box-shadow: var(--fc-shadow) var(--fc-ink);
+}
+.p3-cs-spk {
+  display: inline-block; margin-bottom: 6px; padding: 0 8px; font-size: 14px; font-weight: bold; color: #fff;
+  background: var(--fc-pink); border: 2px solid var(--fc-ink);
+}
+.p3-cs-txt { font-size: clamp(16px, 2.2vw, 21px); font-weight: bold; min-height: 28px; }
+.p3-cs-dark .p3-cs-sub { color: #f2e8e2; background: #0b0a0b; border-color: #5a1620; box-shadow: var(--fc-shadow) #000; }
+.p3-cs-dark .p3-cs-spk { background: var(--fc-dk-accent); border-color: #000; }
+.p3-cs-skip {
+  position: absolute; right: 24px; bottom: 12px; font-size: 13px; color: #fff;
+  padding: 1px 8px; background: rgba(0,0,0,0.5); border: 2px solid #000;
+}
+
+/* 히든 루트: 소지품 표시, 안아주기 하얀 화면 */
+.p3-hud-item { color: #cfe3ff; }
+.p3-whiteout {
+  position: absolute; inset: 0; z-index: 18; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 2.6s ease-in; pointer-events: none;
+}
+.p3-whiteout.p3-on { opacity: 1; }
+.p3-whiteout-msg { font-size: 30px; color: #6a5a40; opacity: 0; transition: opacity 1.2s 1.6s; }
+.p3-whiteout.p3-on .p3-whiteout-msg { opacity: 1; }
+
+/* 야광 손글씨 퀴즈 크게 보기 */
+.p3-glow-view { width: min(86vw, 137vh); height: auto; box-shadow: 0 0 40px rgba(120, 255, 100, 0.15); }
+
+/* ===== 디자인 테마 화면 효과 (?theme=1/2/3) — 2D 호러와 같은 주사선·잡음·비네트 ===== */
+.p3-fx { position: absolute; inset: 0; z-index: 4; pointer-events: none; --fx: 0.25; }
+.p3-fx-noise { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated;
+  mix-blend-mode: screen; opacity: calc(var(--fx) * 0.16); }
+.p3-fx-scan { position: absolute; inset: 0; opacity: calc(var(--fx) * 0.6);
+  background: repeating-linear-gradient(to bottom, transparent 0 2px, rgba(0,0,0,0.28) 2px 4px); }
+.p3-fx-vig { position: absolute; inset: 0; opacity: calc(0.45 + var(--fx) * 0.55);
+  box-shadow: inset 0 0 160px 60px rgba(0,0,0,0.85); }
+#phase3-root canvas.p3-rgb {
+  filter: drop-shadow(4px 0 rgba(255, 42, 60, 0.75)) drop-shadow(-4px 0 rgba(0, 240, 255, 0.75)) contrast(1.15);
+  transform: translateX(3px);
+}
+
+/* =========================================================
+   3D 화면 UI — 2D "방송 사고" 스타일 (docs/10) (2026-11-16)
+   기존 규칙을 덮어씀: 다크 패널 + 검은 굵은 테두리 + 오프셋 그림자 + Galmuri
+   ========================================================= */
+#phase3-root { font-family: var(--fc-font); }
+
+/* 시작·일시정지·게임오버 화면 */
+#phase3-root .p3-overlay {
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 2px, rgba(0,0,0,0.35) 2px 4px),
+    rgba(12, 10, 12, 0.86);
+  box-shadow: inset 0 0 180px 70px rgba(0,0,0,0.9);
+}
+#phase3-root .p3-box {
+  min-width: 400px; padding: 22px 34px 20px; text-align: center; line-height: 1.6;
+  color: var(--fc-dk-ink); background: var(--fc-dk-panel);
+  border: 4px solid #000; border-radius: 6px;
+  box-shadow: 6px 6px 0 #000, 0 0 0 2px var(--fc-dk-accent) inset;
+}
+#phase3-root .p3-badges { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+#phase3-root .p3-badge {
+  padding: 1px 10px; font-size: 12px; font-weight: bold; letter-spacing: 2px;
+  color: var(--fc-dk-ink); background: #000; border: 2px solid var(--fc-dk-accent);
+}
+#phase3-root .p3-badge-rec { color: #fff; background: var(--fc-dk-accent); border-color: #000; animation: p3-rec 1.4s steps(1) infinite; }
+@keyframes p3-rec { 50% { opacity: 0.35; } }
+
+#phase3-root .p3-title {
+  position: relative; margin: 8px 0 2px;
+  font-family: var(--fc-font-title); font-size: 60px; font-weight: bold; letter-spacing: 4px;
+  color: var(--fc-dk-ink);
+}
+#phase3-root .p3-title-glitch {
+  color: var(--fc-dk-red);
+  text-shadow: 4px 0 var(--fc-dk-cyan), -4px 0 #000, 0 0 22px rgba(255, 42, 60, 0.45);
+  animation: p3-jitter 2.6s steps(1) infinite;
+}
+@keyframes p3-jitter {
+  0%, 86%, 100% { transform: none; }
+  88% { transform: translate(-4px, 2px); text-shadow: -6px 0 var(--fc-dk-cyan), 6px 0 #000; }
+  90% { transform: translate(5px, -2px) skewX(-8deg); }
+  92% { transform: translate(-2px, 0); }
+}
+#phase3-root .p3-msg { color: var(--fc-dk-muted); margin: 4px 0 14px; animation: p3-rec 1.6s steps(1) infinite; }
+#phase3-root .p3-keys { color: var(--fc-dk-ink); font-size: 14px; }
+#phase3-root .p3-keys kbd {
+  min-width: 26px; padding: 2px 6px; font-family: var(--fc-font); font-weight: bold;
+  color: var(--fc-dk-ink); background: #000; border: 2px solid var(--fc-dk-accent); border-radius: 3px;
+  box-shadow: 2px 2px 0 var(--fc-dk-accent);
+}
+#phase3-root .p3-sens { color: var(--fc-dk-muted); }
+#phase3-root .p3-sens input { accent-color: var(--fc-dk-red); }
+#phase3-root .p3-tmp { border-top: 2px dashed #3a2a2e; color: #6a5a5e; }
+#phase3-root .p3-tmp button {
+  font-family: var(--fc-font); font-size: 12px; color: var(--fc-dk-muted);
+  background: #000; border: 2px dashed #3a2a2e; padding: 4px 10px;
+}
+#phase3-root .p3-gameover {
+  margin: 10px 0 2px; font-family: var(--fc-font-title); font-size: 52px; font-weight: bold;
+  color: var(--fc-dk-red); text-shadow: 5px 0 var(--fc-dk-cyan), -5px 0 #000;
+  animation: p3-jitter 1.2s steps(1) infinite;
+}
+#phase3-root .p3-btn {
+  margin-top: 6px; padding: 10px 26px; font-family: var(--fc-font); font-size: 16px; font-weight: bold;
+  color: #fff; background: var(--fc-dk-accent); border: 3px solid #000; border-radius: 4px;
+  box-shadow: 4px 4px 0 #000; cursor: pointer;
+}
+#phase3-root .p3-btn:active { transform: translate(3px, 3px); box-shadow: none; }
+
+/* 플레이 중 UI: 조사 안내 · 메시지 · 진행 상황 · 조작 안내 */
+#phase3-root .p3-prompt {
+  padding: 4px 12px; font-weight: bold; color: var(--fc-dk-ink);
+  background: var(--fc-dk-panel); border: 3px solid #000; border-radius: 4px; box-shadow: 3px 3px 0 #000;
+}
+#phase3-root .p3-toast {
+  padding: 10px 18px; color: var(--fc-dk-ink); background: var(--fc-dk-panel);
+  border: 3px solid #000; border-left: 8px solid var(--fc-dk-accent); box-shadow: 4px 4px 0 #000;
+}
+#phase3-root .p3-hud {
+  padding: 8px 12px; color: var(--fc-dk-ink); background: var(--fc-dk-panel);
+  border: 3px solid #000; border-radius: 4px; box-shadow: 4px 4px 0 #000;
+}
+#phase3-root .p3-digit { color: var(--fc-dk-red); background: #000; border: 2px solid var(--fc-dk-accent); font-family: var(--fc-font); }
+#phase3-root .p3-hud-key.p3-on { color: var(--fc-yellow); }
+#phase3-root .p3-hint { color: rgba(236, 227, 222, 0.55); text-shadow: 1px 1px 0 #000; }
+
+/* 성적표·번호키·야광 퀴즈 창 */
+#phase3-root .p3-panel {
+  background: repeating-linear-gradient(to bottom, transparent 0 2px, rgba(0,0,0,0.3) 2px 4px), rgba(12, 10, 12, 0.78);
+}
+#phase3-root .p3-panel-tip { color: var(--fc-dk-muted); }
+#phase3-root .p3-keypad {
+  background: var(--fc-dk-panel); border: 4px solid #000; border-radius: 6px;
+  box-shadow: 6px 6px 0 #000, 0 0 0 2px var(--fc-dk-accent) inset;
+}
+#phase3-root .p3-keypad-title { font-family: var(--fc-font-title); }
+#phase3-root .p3-sheet-view { border: 4px solid #000; box-shadow: 6px 6px 0 #000; }
+
+/* =========================================================
+   휴대폰 터치 조작 (#phase3-root.p3-touch)
+   ========================================================= */
+#phase3-root.p3-touch { touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+#phase3-root.p3-touch .p3-crosshair { width: 6px; height: 6px; }
+
+/* 이동 조이스틱: 평소엔 왼쪽 아래, 왼쪽 화면을 누르면 그 자리로 이동 */
+.p3-joy {
+  position: absolute; left: 40px; bottom: 30px; z-index: 7;
+  width: 104px; height: 104px; margin: 0;
+  border-radius: 50%; border: 3px solid rgba(236, 227, 222, 0.55);
+  background: rgba(236, 227, 222, 0.12); pointer-events: none; opacity: 0.75;
+}
+.p3-joy.p3-joy-on { bottom: auto; margin: -52px 0 0 -52px; opacity: 1; }
+.p3-joy-knob {
+  position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; margin: -23px 0 0 -23px;
+  border-radius: 50%; background: var(--fc-pink, #ff8fab); border: 3px solid #000; box-shadow: 3px 3px 0 #000;
+}
+
+/* 일시정지 버튼: 왼쪽 위 */
+.p3-pause-btn {
+  position: absolute; left: 14px; top: 12px; z-index: 8;
+  padding: 8px 12px; font: inherit; font-family: var(--fc-font, sans-serif); font-size: 14px;
+  color: var(--fc-dk-ink, #ece3de); background: var(--fc-dk-panel, #211d1f);
+  border: 3px solid var(--fc-dk-red, #ff2a3c); border-radius: 0; box-shadow: 3px 3px 0 #000;
+}
+
+/* 물건을 보면 오른쪽 아래에 뜨는 ▶ 버튼 (조사하기) */
+#phase3-root.p3-touch .p3-prompt {
+  left: auto; right: 22px; top: auto; bottom: 26px; transform: none;
+  z-index: 8; pointer-events: auto; cursor: pointer;
+  padding: 14px 18px; font-size: 17px; max-width: 46vw; white-space: normal; text-align: left;
+  background: var(--fc-dk-accent, #8b1e2b); color: #fff; border: 3px solid #000; box-shadow: 4px 4px 0 #000;
+  animation: p3-tap-pulse 1.2s ease-in-out infinite;
+}
+#phase3-root.p3-touch .p3-prompt:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 #000; }
+@keyframes p3-tap-pulse { 50% { background: #b02a3a; } }
+
+/* 터치에서는 안내 메시지를 위쪽에 (▶ 버튼과 안 겹치게) */
+#phase3-root.p3-touch .p3-toast { bottom: auto; top: 58px; max-width: 70vw; font-size: 14px; }
+#phase3-root.p3-touch .p3-hint { font-size: 12px; }
+#phase3-root.p3-touch .p3-hud { font-size: 12px; }
+
+/* 번호키 숫자판 */
+.p3-numpad { display: grid; grid-template-columns: repeat(3, 56px); gap: 8px; justify-content: center; margin-top: 10px; }
+.p3-numpad button {
+  height: 44px; font: inherit; font-family: var(--fc-font, sans-serif); font-size: 18px;
+  color: var(--fc-dk-ink, #ece3de); background: var(--fc-dk-bg2, #1c1719);
+  border: 3px solid #000; box-shadow: 3px 3px 0 #000; border-radius: 0;
+}
+.p3-numpad button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #000; }
+
+/* 폰 가로 화면은 세로 길이가 짧음 → 시작/일시정지 상자 줄이기 */
+@media (max-height: 500px) {
+  #phase3-root .p3-overlay, #phase3-root .p3-panel { padding-top: 64px; box-sizing: border-box; }
+  #phase3-root .p3-overlay { align-items: flex-start; }
+  #phase3-root .p3-box { transform: scale(0.74); transform-origin: center top; }
+  #phase3-root .p3-title { font-size: 40px; }
+  .p3-numpad { grid-template-columns: repeat(6, 46px); }
+  .p3-numpad button { height: 38px; }
+}
+
+/* 아이폰 노치·홈바 피하기 (앱처럼 실행했을 때) */
+@supports (padding: env(safe-area-inset-left)) {
+  #phase3-root.p3-touch .p3-joy:not(.p3-joy-on) { left: calc(40px + env(safe-area-inset-left)); bottom: calc(30px + env(safe-area-inset-bottom)); }
+  #phase3-root.p3-touch .p3-pause-btn { left: calc(14px + env(safe-area-inset-left)); top: calc(12px + env(safe-area-inset-top)); }
+  #phase3-root.p3-touch .p3-prompt { right: calc(22px + env(safe-area-inset-right)); bottom: calc(26px + env(safe-area-inset-bottom)); }
+  #phase3-root.p3-touch .p3-hud { right: calc(14px + env(safe-area-inset-right)); }
+}
+
+/* =========================================================
+   갑툭튀 (F 서랍 / 케첩 그릇) — js 9-3
+   ========================================================= */
+.p3-scare { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 19; pointer-events: none; }
+#phase3-root.p3-shake canvas:not(.p3-scare) { animation: p3-scare-shake 0.09s steps(2) infinite; }
+@keyframes p3-scare-shake {
+  0% { transform: translate(-6px, 3px) scale(1.02); }
+  50% { transform: translate(7px, -4px) scale(1.03); }
+  100% { transform: translate(-3px, 2px) scale(1.02); }
+}
+/* 아이폰: 그냥 화면을 탭해도 반응하도록 (Safari는 cursor:pointer 가 있어야 탭을 클릭으로 인식) */
+#phase3-root.p3-touch .p3-panel, .p3-cs-root { cursor: pointer; }

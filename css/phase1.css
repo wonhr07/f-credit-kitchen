@@ -1,0 +1,445 @@
+/* =========================================================
+   F-Credit Kitchen | 팀원 B | 공지 v5 아트 디렉션
+   css/phase1.css : Phase 1 + Transition 전용
+   공용 팔레트/글꼴은 A의 --fc-* 변수를 우선 사용합니다.
+   이전 A 파일에도 화면이 표시되도록 var() 기본값을 둡니다.
+   ========================================================= */
+
+#phase1-root {
+  /* 밝은 방송 */
+  --p1-bg: var(--fc-bg, #fff4dc);
+  --p1-bg2: var(--fc-bg2, #ffe3ec);
+  --p1-panel: var(--fc-panel, #fffaf0);
+  --p1-ink: var(--fc-ink, #3b2a2a);
+  --p1-line: var(--fc-ink, #3b2a2a);
+  --p1-muted: var(--fc-muted, #7a6464);
+  --p1-pink: var(--fc-pink, #ff8fab);
+  --p1-mint: var(--fc-mint, #a8e6cf);
+  --p1-yellow: var(--fc-yellow, #ffd84d);
+  --p1-red: var(--fc-red, #e84a5f);
+  --p1-sky: var(--fc-sky, #bfefff);
+  --p1-font: var(--fc-font, "Courier New", monospace);
+  --p1-title: var(--fc-font-title, var(--p1-font));
+  --p1-shadow: var(--fc-shadow, 4px 4px 0);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  background: var(--p1-bg);
+  color: var(--p1-ink);
+  font-family: var(--p1-font);
+  transition: background-color .8s steps(10), color .8s steps(10);
+}
+#phase1-root.p1-horror {
+  /* 배치는 바꾸지 않고 팔레트만 어둡게 뒤집습니다. */
+  --p1-bg: var(--fc-dk-bg, #121012);
+  --p1-bg2: var(--fc-dk-bg2, #1c1719);
+  --p1-panel: var(--fc-dk-panel, #211d1f);
+  --p1-ink: var(--fc-dk-ink, #ece3de);
+  --p1-line: var(--fc-dk-line, #050505);
+  --p1-muted: var(--fc-dk-muted, #a8a09b);
+  --p1-pink: var(--fc-dk-accent, #8b1e2b);
+  --p1-mint: var(--fc-dk-bg2, #1c1719);
+  --p1-yellow: var(--fc-dk-accent, #8b1e2b);
+  --p1-red: var(--fc-dk-red, #ff2a3c);
+  --p1-sky: var(--fc-dk-panel, #211d1f);
+}
+#phase1-root .p1-screen,
+#phase1-root .p1-screen * { box-sizing: border-box; }
+#phase1-root .p1-screen {
+  min-height: 100%;
+  padding: 82px 18px 20px; /* 상단 중앙 200×60px를 A의 공통 타이머용으로 비움 */
+  background: repeating-conic-gradient(var(--p1-bg2) 0% 25%, var(--p1-bg) 0% 50%) 0 0 / 28px 28px;
+  color: var(--p1-ink);
+  transition: background-color .8s steps(10), color .8s steps(10), filter .35s steps(3);
+  line-height: 1.45;
+}
+#phase1-root .p1-broadcast {
+  width: min(1060px, 100%);
+  margin: 0 auto;
+  background: var(--p1-panel);
+  border: 4px solid var(--p1-line);
+  border-radius: 6px;
+  box-shadow: var(--p1-shadow) var(--p1-line);
+  overflow: hidden;
+  transition: background-color .8s steps(10), border-color .8s steps(10), box-shadow .8s steps(10);
+}
+#phase1-root .p1-broadcast-bar {
+  min-height: 43px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 7px 15px; background: var(--p1-panel); border-bottom: 3px solid var(--p1-line);
+  font-size: 11px; font-weight: 800;
+}
+#phase1-root .p1-on-air {
+  background: var(--p1-red); color: var(--p1-panel);
+  border: 3px solid var(--p1-line); padding: 3px 9px; border-radius: 4px;
+  animation: p1-blink 1.8s steps(2, end) infinite;
+}
+#phase1-root .p1-channel { font-family: var(--p1-title); font-size: 14px; letter-spacing: 1px; }
+#phase1-root .p1-episode { color: var(--p1-muted); }
+#phase1-root .p1-stage-banner {
+  text-align: center;
+  font-family: var(--p1-title); font-weight: 900; font-size: clamp(18px, 2.5vw, 25px);
+  letter-spacing: 1px; padding: 10px 14px 9px;
+  background: var(--p1-pink); border-bottom: 4px solid var(--p1-line);
+  color: var(--p1-ink); text-shadow: 2px 2px var(--p1-panel);
+}
+#phase1-root .p1-stage-banner span { margin-left: 18px; font-size: 12px; font-weight: 700; text-shadow: none; }
+#phase1-root .p1-stage {
+  display: grid; grid-template-columns: minmax(118px, 1fr) minmax(350px, 3fr) minmax(108px, .85fr);
+  min-height: 294px;
+  background: var(--p1-bg);
+  border-bottom: 4px solid var(--p1-line);
+}
+#phase1-root .p1-fridge-zone,
+#phase1-root .p1-tasting-zone {
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  gap: 10px; padding: 16px 9px;
+}
+#phase1-root .p1-speech-tag {
+  font-weight: 900; font-size: 12px; background: var(--p1-panel);
+  border: 3px solid var(--p1-line); border-radius: 4px; padding: 3px 9px;
+  box-shadow: 3px 3px 0 var(--p1-line);
+}
+#phase1-root .p1-fridge {
+  position: relative; width: 99px; height: 152px; padding: 5px;
+  border: 4px solid var(--p1-line); border-radius: 6px;
+  background: var(--p1-sky); box-shadow: 4px 4px 0 var(--p1-line);
+  display: flex; flex-direction: column; gap: 4px;
+}
+#phase1-root .p1-fridge-top,
+#phase1-root .p1-fridge-bottom { position: relative; background: var(--p1-panel); border: 3px solid var(--p1-line); border-radius: 3px; }
+#phase1-root .p1-fridge-top { height: 60%; }
+#phase1-root .p1-fridge-bottom { flex: 1; }
+#phase1-root .p1-fridge-top i,
+#phase1-root .p1-fridge-bottom i { position: absolute; display: block; width: 6px; height: 21px; top: 11px; right: 8px; background: var(--p1-line); }
+#phase1-root .p1-fridge-bottom i { height: 11px; top: 6px; }
+#phase1-root .p1-fridge-magnet { position: absolute; top: 18px; left: 13px; color: var(--p1-red); font-size: 17px; }
+#phase1-root .p1-duel { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: end; padding: 17px 6px 0; }
+#phase1-root .p1-versus { position: absolute; left: 50%; top: 9px; transform: translateX(-50%); font: 900 22px var(--p1-title); color: var(--p1-red); text-shadow: 3px 3px var(--p1-line); }
+#phase1-root .p1-chef { align-self: end; display: flex; flex-direction: column; align-items: center; min-width: 0; }
+#phase1-root .p1-nameplate {
+  display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 6px;
+  width: min(100%, 220px); padding: 4px;
+  background: var(--p1-mint); border: 3px solid var(--p1-line);
+  font: 900 13px var(--p1-font); text-align: center;
+}
+#phase1-root .p1-nameplate small { font-size: 9px; font-weight: 700; color: var(--p1-muted); }
+#phase1-root .p1-portrait { height: 151px; width: 155px; max-width: 100%; display: flex; align-items: flex-end; justify-content: center; }
+#phase1-root .p1-portrait canvas {
+  display: block; width: 136px; height: 136px; max-width: 100%;
+  image-rendering: pixelated; image-rendering: crisp-edges;
+  filter: drop-shadow(4px 4px 0 var(--p1-line));
+}
+#phase1-root .p1-counter { width: 100%; border: 4px solid var(--p1-line); border-bottom-width: 10px; min-height: 61px; background: var(--p1-pink); position: relative; }
+#phase1-root .p1-counter-top { display: flex; justify-content: center; gap: 16px; align-items: center; min-height: 50px; }
+#phase1-root .p1-burner { width: 39px; height: 9px; background: var(--p1-line); border: 3px solid var(--p1-panel); border-radius: 50%; }
+#phase1-root .p1-pot-visual { position: relative; width: 62px; height: 30px; border: 4px solid var(--p1-line); border-radius: 3px 3px 12px 12px; background: var(--p1-sky); }
+#phase1-root .p1-pot-visual::before { content: ""; position: absolute; left: -12px; top: -1px; width: 8px; height: 8px; background: var(--p1-line); }
+#phase1-root .p1-pot-lid { position: absolute; width: 68px; top: -8px; left: -7px; border-top: 5px solid var(--p1-line); }
+#phase1-root .p1-pot-ready { background: var(--p1-yellow); }
+#phase1-root .p1-steam { position: absolute; top: -33px; left: 15px; color: var(--p1-panel); font-size: 23px; animation: p1-steam 2s steps(3) infinite; text-shadow: 2px 2px var(--p1-line); }
+#phase1-root .p1-pot-count { position: absolute; bottom: -8px; right: 5px; padding: 0 4px; background: var(--p1-panel); border: 2px solid var(--p1-line); font-size: 10px; }
+#phase1-root .p1-tasting-table { position: relative; width: min(110px, 100%); height: 60px; margin-top: 66px; background: var(--p1-pink); border: 4px solid var(--p1-line); box-shadow: 4px 8px 0 var(--p1-line); }
+#phase1-root .p1-tasting-plate { position: absolute; inset: 10px 23px; border-radius: 50%; background: var(--p1-panel); border: 3px solid var(--p1-line); }
+#phase1-root .p1-tasting-label { font-size: 11px; color: var(--p1-muted); text-align: center; }
+#phase1-root .p1-production-strip { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; background: var(--p1-mint); border-bottom: 4px solid var(--p1-line); padding: 8px 16px; font-size: 11px; font-weight: 800; }
+#phase1-root .p1-camera { display: flex; align-items: center; gap: 7px; }
+#phase1-root .p1-camera i { display: block; background: var(--p1-ink); width: 19px; height: 13px; border: 3px solid var(--p1-line); box-shadow: 4px -3px 0 var(--p1-red); }
+#phase1-root .p1-seat-row { letter-spacing: 3px; color: var(--p1-line); }
+#phase1-root .p1-audience-label { font-weight: 700; }
+#phase1-root .p1-panels { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; background: var(--p1-bg2); }
+#phase1-root .p1-dialog-box { margin: 18px; position: relative; min-height: 217px; padding: 24px 18px 14px; border: 4px solid var(--p1-line); border-radius: 5px; background: var(--p1-panel); box-shadow: 4px 4px 0 var(--p1-line); }
+#phase1-root .p1-speaker-name { position: absolute; left: 11px; top: -16px; border: 3px solid var(--p1-line); background: var(--p1-pink); padding: 2px 12px; font-weight: 900; font-size: 13px; }
+#phase1-root .p1-dialog-line { font-size: clamp(13px, 1.4vw, 16px); font-weight: 800; line-height: 1.6; min-height: 53px; white-space: pre-wrap; padding-right: 18px; }
+#phase1-root .p1-dialog-next { position: absolute; top: 75px; right: 11px; color: var(--p1-red); font-size: 13px; animation: p1-blink 1s steps(2) infinite; }
+#phase1-root .p1-feedback { margin: 7px 0; border: 2px dashed var(--p1-line); padding: 8px; background: var(--p1-bg); font-size: 12px; min-height: 43px; }
+#phase1-root .p1-feedback-warning { border-color: var(--p1-red); }
+#phase1-root .p1-feedback-success { border-color: var(--p1-mint); }
+#phase1-root .p1-progress { display: grid; grid-template-columns: 1fr auto; gap: 5px; font-size: 11px; margin-top: 12px; font-weight: 800; }
+#phase1-root .p1-progress-rail { grid-column: 1/-1; height: 12px; background: var(--p1-bg2); border: 3px solid var(--p1-line); }
+#phase1-root .p1-progress-fill { height: 100%; background: var(--p1-pink); transition: width .2s steps(4); }
+#phase1-root .p1-work-box { padding: 18px 18px 18px 0; display: flex; flex-direction: column; justify-content: center; gap: 11px; min-width: 0; }
+#phase1-root .p1-recipe-note { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 15px 10px 9px; background: var(--p1-panel); border: 3px solid var(--p1-line); box-shadow: 4px 4px 0 var(--p1-line); text-align: center; }
+#phase1-root .p1-pin { position: absolute; top: -10px; left: calc(50% - 6px); width: 14px; height: 14px; background: var(--p1-red); border: 3px solid var(--p1-line); border-radius: 50%; }
+#phase1-root .p1-recipe-kicker { color: var(--p1-muted); font-size: 10px; font-weight: 900; }
+#phase1-root .p1-recipe-name {
+  color: var(--p1-ink);
+  font-family: var(--p1-title);
+  font-size: clamp(14px, 1.6vw, 17px);
+  font-weight: 900;
+  line-height: 1.4;
+  padding-bottom: 5px;
+  margin-bottom: 2px;
+  border-bottom: 2px dashed var(--p1-line);
+}
+#phase1-root .p1-recipe-note strong { font-size: 12px; }
+#phase1-root .p1-recipe-note small { color: var(--p1-muted); font-size: 11px; }
+#phase1-root .p1-ingredients { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+#phase1-root .p1-ingredient {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-width: 0; gap: 2px; min-height: 82px; padding: 5px 3px;
+  font: 900 11px var(--p1-font); color: var(--p1-ink);
+  background: var(--p1-panel); border: 3px solid var(--p1-line); border-radius: 5px;
+  box-shadow: 3px 3px 0 var(--p1-line); cursor: pointer;
+}
+#phase1-root .p1-pixel-icon { display: block; width: 43px; height: 43px; image-rendering: pixelated; }
+#phase1-root .p1-picked-mark { font-size: 13px; }
+#phase1-root .p1-ingredient:hover:not(:disabled), #phase1-root .p1-ingredient:focus-visible { background: var(--p1-mint); outline: 2px dashed var(--p1-ink); outline-offset: 2px; }
+#phase1-root .p1-ingredient:disabled { opacity: .56; cursor: default; }
+#phase1-root .p1-ingredient.p1-picked { background: var(--p1-mint); }
+#phase1-root .p1-button { background: var(--p1-yellow); color: var(--p1-ink); padding: 8px 10px; font: 900 12px var(--p1-font); border: 3px solid var(--p1-line); border-radius: 5px; box-shadow: 4px 4px 0 var(--p1-line); cursor: pointer; transition: transform .07s steps(2), box-shadow .07s steps(2); }
+#phase1-root .p1-button:hover, #phase1-root .p1-button:focus-visible { outline: 2px dashed var(--p1-ink); outline-offset: 2px; }
+#phase1-root .p1-button:active { transform: translate(3px,3px); box-shadow: none; }
+#phase1-root .p1-drawer { max-width: 118px; padding: 8px 4px; }
+#phase1-root .p1-next-step { font-size: 11px; text-align: center; }
+#phase1-root .p1-next-step strong { border-bottom: 2px dashed var(--p1-red); }
+#phase1-root .p1-submit { padding: 15px; font-size: 14px; }
+#phase1-root .p1-eval-title { text-align: center; font-weight: 900; font-size: 13px; }
+#phase1-root .p1-choices { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
+#phase1-root .p1-choice { min-height: 73px; }
+#phase1-root .p1-warning-note { color: var(--p1-red); text-align: center; font-size: 11px; }
+#phase1-root .p1-final-line { padding: 15px; border: 3px dashed var(--p1-red); text-align: center; line-height: 1.8; font-weight: 900; }
+#phase1-root .p1-final-line span { display: block; color: var(--p1-red); }
+#phase1-root .p1-footnote { padding: 12px; text-align: center; font-size: 10px; font-weight: 800; color: var(--p1-muted); }
+#phase1-root .p1-looking .p1-professor canvas { transform: rotate(12deg) translateX(8px); }
+#phase1-root.p1-horror .p1-broadcast { filter: contrast(1.2) saturate(.85); }
+#phase1-root.p1-horror .p1-dialog-line { color: var(--p1-red); }
+#phase1-root.p1-horror .p1-screen { transition: background .8s steps(10), color .8s steps(10); }
+
+@keyframes p1-blink { 50% { opacity: .5; } }
+@keyframes p1-steam { 0% { transform: translateY(3px); opacity:.3; } 50% { transform: translateY(-4px); opacity: 1; } 100% { transform: translateY(-8px); opacity: 0; } }
+
+/* ===== 타이틀 화면: 2D 요리 게임의 첫 화면 (팀원 B) ===== */
+#phase1-root .p1-title-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+}
+#phase1-root .p1-title-tv {
+  width: min(920px, 100%);
+  margin: 0 auto;
+  background: var(--p1-panel);
+  border: 4px solid var(--p1-line);
+  border-radius: 6px;
+  box-shadow: 6px 6px 0 var(--p1-line);
+  overflow: hidden;
+}
+#phase1-root .p1-title-tvbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 17px;
+  border-bottom: 4px solid var(--p1-line);
+  background: var(--p1-mint);
+  font-size: 11px;
+  font-weight: 900;
+}
+#phase1-root .p1-title-standby {
+  border: 3px solid var(--p1-line);
+  border-radius: 4px;
+  background: var(--p1-panel);
+  padding: 3px 9px;
+  color: var(--p1-red);
+}
+#phase1-root .p1-title-channel {
+  font: 900 14px var(--p1-title);
+  letter-spacing: 1px;
+}
+#phase1-root .p1-title-episode { color: var(--p1-ink); }
+#phase1-root .p1-title-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 26px 24px 30px;
+  background: repeating-conic-gradient(var(--p1-bg2) 0% 25%, var(--p1-bg) 0% 50%) 0 0 / 38px 38px;
+  text-align: center;
+}
+#phase1-root .p1-title-ribbon {
+  display: inline-block;
+  padding: 6px 19px;
+  border: 3px solid var(--p1-line);
+  border-radius: 4px;
+  background: var(--p1-yellow);
+  font: 900 12px var(--p1-font);
+  box-shadow: 4px 4px 0 var(--p1-line);
+  letter-spacing: 1px;
+  transform: rotate(-2deg);
+}
+#phase1-root .p1-title-eyebrow {
+  margin: 16px 0 3px;
+  color: var(--p1-muted);
+  font: 900 12px var(--p1-font);
+}
+#phase1-root .p1-title-heading {
+  max-width: 100%;
+  margin: 0;
+  color: var(--p1-ink);
+  font: 900 clamp(27px, 4.1vw, 45px)/1.24 var(--p1-title);
+  letter-spacing: -1px;
+  text-shadow: 3px 3px 0 var(--p1-panel);
+}
+#phase1-root .p1-title-heading span { display: inline-block; color: var(--p1-red); }
+#phase1-root .p1-title-sub {
+  margin: 8px 0 5px;
+  color: var(--p1-muted);
+  font: 900 13px var(--p1-font);
+}
+#phase1-root .p1-title-sub span { color: var(--p1-red); }
+#phase1-root .p1-title-duel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(12px, 4vw, 38px);
+  width: min(650px, 100%);
+  margin: 12px auto 19px;
+}
+#phase1-root .p1-title-contestant {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(220px, 40%);
+  padding: 8px 7px 10px;
+  background: var(--p1-panel);
+  border: 3px solid var(--p1-line);
+  border-radius: 5px;
+  box-shadow: 4px 4px 0 var(--p1-line);
+}
+#phase1-root .p1-title-contestant-student { background: var(--p1-mint); }
+#phase1-root .p1-title-face {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: clamp(78px, 15vw, 123px);
+  padding-top: 5px;
+  overflow: hidden;
+  background: var(--p1-bg2);
+  border: 2px solid var(--p1-line);
+  border-radius: 3px;
+}
+#phase1-root .p1-title-contestant-student .p1-title-face { background: var(--p1-bg); }
+#phase1-root .p1-title-face canvas {
+  display: block;
+  width: clamp(88px, 17vw, 132px);
+  height: clamp(88px, 17vw, 132px);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+#phase1-root .p1-title-contestant strong { margin-top: 5px; font-size: 15px; }
+#phase1-root .p1-title-contestant small { margin-top: 1px; color: var(--p1-muted); font: 900 9px var(--p1-font); }
+#phase1-root .p1-title-vs {
+  position: relative;
+  flex: none;
+  font: 900 clamp(25px, 5vw, 39px) var(--p1-title);
+  color: var(--p1-red);
+  text-shadow: 3px 3px 0 var(--p1-line);
+  transform: rotate(-8deg);
+}
+#phase1-root .p1-title-vs span { position: absolute; font-size: 15px; top: -13px; right: -8px; color: var(--p1-yellow); }
+#phase1-root .p1-title-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(450px, 100%);
+  padding-top: 2px;
+}
+#phase1-root .p1-title-start {
+  width: min(310px, 100%);
+  min-height: 61px;
+  padding: 12px 20px;
+  font: 900 clamp(18px, 2.6vw, 24px) var(--p1-title);
+  background: var(--p1-yellow);
+  border-width: 4px;
+  box-shadow: 5px 5px 0 var(--p1-line);
+}
+#phase1-root .p1-title-start:hover { background: var(--p1-mint); }
+#phase1-root .p1-title-hint {
+  margin: 13px 0 13px;
+  font: 800 11px var(--p1-font);
+  color: var(--p1-muted);
+}
+#phase1-root .p1-title-endings {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 20px;
+  min-width: min(300px, 100%);
+  border: 3px dashed var(--p1-line);
+  border-radius: 5px;
+  background: var(--p1-panel);
+  font: 900 12px var(--p1-font);
+}
+#phase1-root .p1-title-trophy { color: var(--p1-red); font-size: 16px; }
+#phase1-root .p1-title-bottom {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 9px 17px;
+  border-top: 4px solid var(--p1-line);
+  background: var(--p1-pink);
+  color: var(--p1-ink);
+  font: 800 11px var(--p1-font);
+}
+@media (max-width: 620px) {
+  #phase1-root .p1-title-tvbar { gap: 6px; padding: 7px 9px; }
+  #phase1-root .p1-title-episode { display: none; }
+  #phase1-root .p1-title-hero { padding: 20px 11px 25px; }
+  #phase1-root .p1-title-ribbon { font-size: 10px; padding: 5px 9px; }
+  #phase1-root .p1-title-heading { font-size: clamp(24px, 7vw, 33px); }
+  #phase1-root .p1-title-duel { gap: 13px; }
+  #phase1-root .p1-title-contestant { width: 40%; }
+  #phase1-root .p1-title-vs { font-size: 28px; }
+  #phase1-root .p1-title-bottom { justify-content: center; font-size: 10px; }
+  #phase1-root .p1-title-bottom span:last-child { display: none; }
+}
+
+/* ===== Transition: B 영역 #transition-root 안에서만 그림 ===== */
+#transition-root .tr-screen { position: absolute; inset: 0; pointer-events: none; overflow: hidden; opacity: 1; }
+#transition-root .tr-noise { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; opacity: .12; mix-blend-mode: screen; }
+#transition-root .tr-scanlines { position: absolute; inset: 0; background: repeating-linear-gradient(to bottom, transparent 0 3px, rgba(0,0,0,.22) 3px 5px); opacity: .6; }
+#transition-root .tr-vignette { position: absolute; inset: 0; box-shadow: inset 0 0 110px 55px rgba(0,0,0,.52); }
+#transition-root .tr-glitch-label { position: absolute; top: 45%; left: 50%; transform: translate(-50%,-50%); font: 900 clamp(24px,6vw,56px) var(--fc-font-title,monospace); letter-spacing: 5px; color: var(--fc-dk-red,#ff2a3c); text-shadow: 5px 0 var(--fc-dk-cyan,#00f0ff), -5px 0 #111; opacity: 0; white-space: nowrap; }
+#transition-root .tr-screen.tr-glitching .tr-glitch-label { opacity: 1; animation: tr-jitter .16s steps(2) 6; }
+#transition-root .tr-screen.tr-glitching .tr-noise { opacity: .36; }
+#transition-root .tr-screen.tr-glitching { animation: tr-shake .13s steps(2) 7; }
+#transition-root .tr-blackout { position: absolute; inset: 0; background: #000; opacity: 0; transition: opacity .42s steps(7); }
+#transition-root .tr-screen.tr-dark .tr-blackout { opacity: 1; }
+#transition-root .tr-screen.tr-reveal { transition: opacity .55s steps(9); opacity: 0; }
+@keyframes tr-shake { 0% { transform: translateX(-4px); } 50% { transform: translateX(5px); } 100% { transform: translateX(-2px); } }
+@keyframes tr-jitter { 0% { transform: translate(calc(-50% - 5px),calc(-50% + 3px)); } 50% { transform: translate(calc(-50% + 5px),calc(-50% - 3px)); } }
+
+@media (max-width: 800px) {
+  #phase1-root .p1-screen { padding: 78px 9px 16px; }
+  #phase1-root .p1-stage { grid-template-columns: 105px minmax(0,1fr); }
+  #phase1-root .p1-tasting-zone { display: none; }
+  #phase1-root .p1-duel { gap: 8px; }
+  #phase1-root .p1-portrait { height: 116px; }
+  #phase1-root .p1-portrait canvas { width: 104px; height: 104px; }
+  #phase1-root .p1-nameplate { font-size: 11px; }
+  #phase1-root .p1-panels { grid-template-columns: minmax(0,1fr); }
+  #phase1-root .p1-work-box { padding: 7px 18px 19px; }
+  #phase1-root .p1-dialog-box { min-height: 175px; }
+}
+@media (max-width: 460px) {
+  #phase1-root .p1-broadcast-bar { font-size: 9px; }
+  #phase1-root .p1-channel { font-size: 11px; }
+  #phase1-root .p1-stage { grid-template-columns: 83px minmax(0,1fr); }
+  #phase1-root .p1-fridge { width: 70px; height: 118px; }
+  #phase1-root .p1-duel { padding: 10px 3px 0; }
+  #phase1-root .p1-portrait { height: 88px; }
+  #phase1-root .p1-portrait canvas { width: 85px; height: 85px; }
+  #phase1-root .p1-counter-top { gap: 0; }
+  #phase1-root .p1-burner { display: none; }
+  #phase1-root .p1-ingredients { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  #phase1-root .p1-seat-row { display: none; }
+  #phase1-root .p1-stage-banner span { display: block; margin: 2px 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #phase1-root .p1-on-air, #phase1-root .p1-steam, #phase1-root .p1-dialog-next,
+  #transition-root .tr-screen, #transition-root .tr-glitch-label { animation: none !important; }
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#121012">
+  <title>교수님의 15분 냉장고 — F-Credit Kitchen</title>
+
+  <!-- 스타일: 사람별 파일 (각자 자기 파일만 수정) -->
+  <link rel="stylesheet" href="css/style.css">   <!-- 공통 (A) -->
+  <link rel="stylesheet" href="css/phase1.css">  <!-- 2D + 전환 (B) -->
+  <link rel="stylesheet" href="css/phase3.css">  <!-- 3D (A) -->
+  <link rel="stylesheet" href="css/phase4.css">  <!-- 엔딩 (C) -->
+
+  <!--
+    Three.js 주소록(importmap)
+    - phase3.js 안의 import "three" 가 아래 인터넷 주소(CDN)로 연결됩니다.
+    - ⚠ 인터넷 연결이 없으면 3D 화면이 로드되지 않습니다.
+    - 버전(0.160.0)을 고정해 두었습니다. 팀 합의 없이 바꾸지 마세요.
+  -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <!-- 각 모듈이 자기 화면을 그리는 영역 (담당자만 내용 변경) -->
+  <div id="phase1-root" class="phase-root" hidden></div>     <!-- 팀원 B: 2D 요리 게임 -->
+  <div id="phase3-root" class="phase-root" hidden></div>     <!-- 팀원 A: 3D 탈출 게임 -->
+  <div id="phase4-root" class="phase-root p4-layer" hidden></div> <!-- 팀원 C: 엔딩 -->
+  <div id="transition-root" class="overlay-root"></div>      <!-- 팀원 B: 전환 연출 (항상 맨 위) -->
+
+  <!-- 오류가 생기면 화면 아래에 빨간 줄로 표시 (main.js가 관리) -->
+  <div id="boot-error" hidden></div>
+
+  <noscript>이 게임은 JavaScript가 필요합니다.</noscript>
+
+  <!--
+    스크립트 로드 순서 (중요!)
+    - type="module" 스크립트는 HTML 해석이 끝난 뒤 '적힌 순서대로' 실행됩니다.
+    - main.js는 반드시 마지막: 모든 모듈이 FCredit에 등록된 뒤 게임을 시작합니다.
+    - gradesheet.js는 맨 처음: 3D(A)와 엔딩(C)이 같이 쓰는 성적표 그림 함수
+    - cutscene.js: 히든 영상 (A)
+  -->
+  <script type="module" src="js/gradesheet.js"></script>
+  <script type="module" src="js/cutscene.js"></script>
+  <script type="module" src="js/phase1.js"></script>
+  <script type="module" src="js/transition.js"></script>
+  <script type="module" src="js/phase3.js"></script>
+  <script type="module" src="js/phase4.js"></script>
+  <script type="module" src="js/bgm.js"></script>      <!-- 배경음악 (A) -->
+  <script type="module" src="js/main.js"></script>
+  <!-- 휴대폰을 세로로 들면 덮는 안내 (style.css) -->
+  <div id="fc-rotate" aria-live="polite">
+    <span class="fc-rotate-rec">● REC</span>
+    <div class="fc-rotate-phone"></div>
+    <p>가로로 돌려주세요</p>
+    <small>이 게임은 가로 화면에서 플레이해요</small>
+  </div>
+</body>
+</html>

@@ -1,0 +1,609 @@
+/* #phase4-root 자체는 z-index를 지정하지 않고 브라우저 hidden 속성을 존중 */
+#phase4-root[hidden] {
+display: none;
+}
+
+.p4-stage {
+position: relative;
+width: 100%;
+height: 100%;
+overflow: hidden;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+font-family: var(--fc-font);
+user-select: none;
+}
+
+/* 일반 엔딩: 차가운 남색 대신 --fc-dk-* 계열의 어두운 방 분위기 */
+.p4-theme-normal {
+background-color: var(--fc-dk-bg, #19121e);
+color: var(--fc-dk-text, #f5eef8);
+}
+
+/* 해피 엔딩: 따뜻한 파스텔 분위기 */
+.p4-theme-happy {
+background-color: var(--fc-bg, #fff7eb);
+color: #261c1a;
+}
+
+/* 화면 전체 옅은 가로줄(주사선) 한 겹 */
+.p4-scanlines {
+position: absolute;
+inset: 0;
+pointer-events: none;
+z-index: 9;
+background: repeating-linear-gradient(
+to bottom,
+rgba(0, 0, 0, 0) 0px,
+rgba(0, 0, 0, 0) 2px,
+rgba(0, 0, 0, 0.14) 3px,
+rgba(0, 0, 0, 0.14) 4px
+);
+}
+
+.p4-theme-happy .p4-scanlines {
+background: repeating-linear-gradient(
+to bottom,
+rgba(0, 0, 0, 0) 0px,
+rgba(0, 0, 0, 0) 3px,
+rgba(40, 22, 24, 0.05) 4px,
+rgba(40, 22, 24, 0.05) 5px
+);
+}
+
+/* ==========================================================================
+자연스러운 방송 뷰파인더 OSD (프레임 모서리 브래킷 + OSD 텍스트)
+========================================================================== */
+.p4-osd {
+position: absolute;
+inset: 12px 14px;
+pointer-events: none;
+z-index: 4;
+}
+
+.p4-osd-top {
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 4px 8px;
+font-family: var(--fc-font);
+font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+font-weight: 700;
+letter-spacing: 0.08em;
+}
+
+.p4-osd-normal .p4-osd-top {
+color: rgba(255, 255, 255, 0.9);
+text-shadow: 2px 2px 0 #000;
+}
+
+.p4-osd-happy .p4-osd-top {
+color: #2b211e;
+text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.p4-osd-left {
+display: inline-flex;
+align-items: center;
+gap: 7px;
+}
+
+.p4-osd-dot {
+display: inline-block;
+width: 9px;
+height: 9px;
+background-color: #ff3b5c;
+border: 2px solid #000;
+animation: p4-rec-blink 1s steps(2, start) infinite;
+}
+
+/* 방송 종료 전환 시 빨간 녹화 점 -> 정지 사각형 아이콘으로 자연스럽게 변경 */
+.p4-osd.is-ended .p4-osd-dot,
+.p4-osd-happy .p4-osd-dot {
+width: 8px;
+height: 8px;
+animation: none;
+}
+
+.p4-osd-normal.is-ended .p4-osd-dot {
+background-color: var(--fc-yellow, #ffe680);
+}
+
+.p4-osd-happy .p4-osd-dot {
+background-color: #2b9348;
+border-color: #1f1716;
+}
+
+@keyframes p4-rec-blink {
+0%, 49% { opacity: 1; }
+50%, 100% { opacity: 0.18; }
+}
+
+/* 카메라 뷰파인더 4귀퉁이 L자 픽셀 브래킷 */
+.p4-osd-corner {
+position: absolute;
+width: 14px;
+height: 14px;
+border-color: rgba(255, 255, 255, 0.45);
+border-style: solid;
+}
+
+.p4-osd-happy .p4-osd-corner {
+border-color: rgba(43, 33, 30, 0.35);
+}
+
+.p4-osd-tl {
+top: 0;
+left: 0;
+border-width: 2px 0 0 2px;
+}
+
+.p4-osd-tr {
+top: 0;
+right: 0;
+border-width: 2px 2px 0 0;
+}
+
+.p4-osd-bl {
+bottom: 0;
+left: 0;
+border-width: 0 0 2px 2px;
+}
+
+.p4-osd-br {
+bottom: 0;
+right: 0;
+border-width: 0 2px 2px 0;
+}
+
+/* 엔딩 진입 첫 0.5초 빨강/청록 화면 갈라짐 (한 번만 재생) */
+.p4-chromatic-split {
+animation: p4-chromatic-once 0.5s steps(2, end) 1 both;
+}
+
+@keyframes p4-chromatic-once {
+0% {
+transform: translate3d(-8px, 4px, 0);
+box-shadow: inset 12px 0 0 rgba(255, 64, 110, 0.55), inset -12px 0 0 rgba(0, 235, 220, 0.55);
+}
+25% {
+transform: translate3d(9px, -5px, 0);
+box-shadow: inset -14px 0 0 rgba(255, 64, 110, 0.6), inset 14px 0 0 rgba(0, 235, 220, 0.6);
+}
+50% {
+transform: translate3d(-6px, -3px, 0);
+box-shadow: inset 8px 0 0 rgba(255, 64, 110, 0.4), inset -8px 0 0 rgba(0, 235, 220, 0.4);
+}
+75% {
+transform: translate3d(4px, 3px, 0);
+box-shadow: inset -4px 0 0 rgba(255, 64, 110, 0.25), inset 4px 0 0 rgba(0, 235, 220, 0.25);
+}
+100% {
+transform: translate3d(0, 0, 0);
+box-shadow: none;
+}
+}
+
+/* 2D 픽셀 캔버스 컨테이너 (16:9 비율 유지) */
+.p4-scene-wrap {
+position: relative;
+width: min(92vw, 940px);
+aspect-ratio: 16 / 9;
+border: 4px solid #000;
+box-shadow: 8px 8px 0 #000;
+background: var(--fc-dk-panel, #24192c);
+filter: blur(8px);
+transform: scale(1.04);
+transition: filter 1.5s ease, transform 1.5s ease;
+}
+
+.p4-theme-happy .p4-scene-wrap {
+border-color: #000;
+background: var(--fc-pink, #ffc2d1);
+box-shadow: 8px 8px 0 #000;
+}
+
+.p4-scene-wrap.p4-scene-clear {
+filter: blur(0);
+transform: scale(1);
+}
+
+.p4-room-canvas {
+display: block;
+width: 100%;
+height: 100%;
+image-rendering: pixelated;
+image-rendering: crisp-edges;
+}
+
+/* 침대 머리맡 성적표 클릭 영역 */
+.p4-bedside-spot {
+position: absolute;
+top: 38%;
+left: 56%;
+transform: translate(-50%, -50%) rotate(6deg);
+background: transparent;
+border: none;
+padding: 4px;
+cursor: pointer;
+display: flex;
+flex-direction: column;
+align-items: center;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.4s ease, transform 0.15s ease;
+z-index: 3;
+}
+
+.p4-bedside-spot.p4-spot-ready {
+opacity: 1;
+pointer-events: auto;
+animation: p4-spot-bob 1.6s steps(2, end) infinite;
+}
+
+.p4-bedside-spot:hover {
+transform: translate(-50%, -50%) rotate(0deg) scale(1.1);
+}
+
+@keyframes p4-spot-bob {
+0%, 100% { margin-top: 0px; }
+50% { margin-top: -4px; }
+}
+
+.p4-gradesheet-canvas {
+display: block;
+image-rendering: pixelated;
+image-rendering: crisp-edges;
+}
+
+.p4-bedside-spot .p4-gradesheet-canvas {
+width: clamp(48px, 6.4vw, 68px);
+height: auto;
+border: 2px solid #000;
+box-shadow: 3px 3px 0 #000;
+}
+
+.p4-gradesheet-fallback {
+width: 52px;
+height: 68px;
+background: #fff;
+color: #d32f2f;
+font-family: var(--fc-font-title);
+font-weight: 900;
+display: flex;
+align-items: center;
+justify-content: center;
+border: 3px solid #000;
+box-shadow: 3px 3px 0 #000;
+}
+
+.p4-bedside-hint {
+margin-top: 6px;
+padding: 3px 8px;
+font-family: var(--fc-font);
+font-size: 11px;
+font-weight: 700;
+color: #000;
+background: var(--fc-yellow, #ffe680);
+border: 2px solid #000;
+box-shadow: 2px 2px 0 #000;
+border-radius: 0;
+white-space: nowrap;
+}
+
+/* 눈꺼풀 & 전환 베일 */
+.p4-eyelid {
+position: absolute;
+left: 0;
+width: 100%;
+height: 52%;
+background: #000000;
+z-index: 4;
+pointer-events: none;
+transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.p4-eyelid-top {
+top: 0;
+transform: translateY(0);
+}
+
+.p4-eyelid-bottom {
+bottom: 0;
+transform: translateY(0);
+}
+
+.p4-eyelid-top.p4-lid-open {
+transform: translateY(-102%);
+}
+
+.p4-eyelid-bottom.p4-lid-open {
+transform: translateY(102%);
+}
+
+.p4-veil {
+position: absolute;
+inset: 0;
+z-index: 5;
+pointer-events: none;
+opacity: 1;
+transition: opacity 1s ease;
+}
+
+.p4-veil-black {
+background: #000000;
+opacity: 0;
+}
+
+.p4-veil-black.p4-veil-solid {
+opacity: 1;
+transition: opacity 0.15s ease;
+}
+
+.p4-veil-white {
+background: var(--fc-bg, #fff7eb);
+opacity: 1;
+}
+
+.p4-veil.p4-veil-fadeout {
+opacity: 0;
+}
+
+/* 2D 픽셀 대사창 */
+.p4-dialogue-box {
+position: absolute;
+bottom: 4vh;
+width: min(90vw, 820px);
+padding: 18px 22px 16px;
+background: var(--fc-dk-panel, #24192c);
+color: var(--fc-dk-text, #f5eef8);
+border: 3px solid #000;
+box-shadow: 6px 6px 0 #000;
+border-radius: 0;
+z-index: 6;
+display: flex;
+flex-direction: column;
+gap: 10px;
+animation: p4-fade-up 0.35s steps(4, end) both;
+}
+
+.p4-theme-happy .p4-dialogue-box {
+background: #ffffff;
+color: #000000;
+border: 3px solid #000;
+box-shadow: 6px 6px 0 #000;
+}
+
+@keyframes p4-fade-up {
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.p4-speaker {
+display: inline-block;
+align-self: flex-start;
+padding: 3px 10px;
+font-family: var(--fc-font);
+font-size: 0.85rem;
+font-weight: 700;
+background: var(--fc-pink, #ff9ebb);
+color: #000000;
+border: 2px solid #000;
+border-radius: 0;
+}
+
+.p4-theme-happy .p4-speaker {
+background: var(--fc-yellow, #ffe680);
+color: #000000;
+}
+
+.p4-dialogue-text {
+margin: 0;
+font-family: var(--fc-font);
+font-size: clamp(1rem, 1.8vw, 1.2rem);
+line-height: 1.6;
+text-align: left;
+}
+
+/* 네모 픽셀 버튼 공통 스타일 */
+.p4-btn-next,
+.p4-btn-restart,
+.p4-btn-secondary {
+font-family: var(--fc-font);
+font-weight: 700;
+border: 3px solid #000;
+box-shadow: 4px 4px 0 #000;
+border-radius: 0;
+cursor: pointer;
+transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.p4-btn-next:hover,
+.p4-btn-restart:hover,
+.p4-btn-secondary:hover {
+transform: translate(-2px, -2px);
+box-shadow: 6px 6px 0 #000;
+}
+
+.p4-btn-next:active,
+.p4-btn-restart:active,
+.p4-btn-secondary:active {
+transform: translate(2px, 2px);
+box-shadow: 2px 2px 0 #000;
+}
+
+.p4-btn-next {
+align-self: flex-end;
+padding: 8px 18px;
+font-size: 0.95rem;
+background: var(--fc-pink, #ff9ebb);
+color: #000000;
+}
+
+.p4-theme-happy .p4-btn-next {
+background: var(--fc-mint, #a8f0dc);
+color: #000000;
+}
+
+/* 성적표 크게 보기 모달 */
+.p4-modal {
+position: absolute;
+inset: 0;
+background: rgba(14, 10, 18, 0.85);
+z-index: 8;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 20px;
+}
+
+.p4-modal-card {
+background: var(--fc-dk-panel, #24192c);
+color: var(--fc-dk-text, #f5eef8);
+border: 4px solid #000;
+box-shadow: 8px 8px 0 #000;
+border-radius: 0;
+padding: 22px;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 14px;
+max-width: 92vw;
+max-height: 90vh;
+}
+
+.p4-theme-happy .p4-modal-card {
+background: var(--fc-bg, #fff7eb);
+color: #000000;
+}
+
+.p4-modal-card .p4-gradesheet-canvas {
+width: min(65vw, 280px);
+height: auto;
+border: 3px solid #000;
+box-shadow: 5px 5px 0 #000;
+}
+
+.p4-modal-caption {
+margin: 0;
+font-family: var(--fc-font);
+font-size: 0.98rem;
+text-align: center;
+}
+
+/* 최종 엔딩 화면 */
+.p4-final-screen {
+position: absolute;
+inset: 0;
+z-index: 7;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+text-align: center;
+padding: 24px;
+animation: p4-final-appear 0.6s steps(4, end) both;
+}
+
+.p4-final-normal {
+background: var(--fc-dk-bg, #19121e);
+color: var(--fc-dk-text, #f5eef8);
+}
+
+.p4-final-happy {
+background: linear-gradient(180deg, var(--fc-bg, #fff7eb) 0%, var(--fc-yellow, #fff0b3) 100%);
+color: #1f1716;
+}
+
+@keyframes p4-final-appear {
+from { opacity: 0; }
+to { opacity: 1; }
+}
+
+.p4-ending-badge {
+font-family: var(--fc-font);
+font-size: 0.9rem;
+font-weight: 700;
+letter-spacing: 2px;
+padding: 5px 14px;
+background: var(--fc-dk-panel, #2b1e34);
+color: var(--fc-dk-cyan, #64dfdf);
+border: 3px solid #000;
+box-shadow: 4px 4px 0 #000;
+border-radius: 0;
+margin-bottom: 16px;
+}
+
+.p4-theme-happy .p4-ending-badge {
+background: var(--fc-pink, #ffb3c6);
+color: #000000;
+}
+
+/* 픽셀 그림자 적용된 엔딩 제목 */
+.p4-ending-title {
+margin: 0 0 16px;
+font-family: var(--fc-font-title);
+font-size: clamp(2.2rem, 5.2vw, 3.8rem);
+letter-spacing: 3px;
+color: #ffffff;
+text-shadow: 3px 3px 0 #000, -2px 0 var(--fc-dk-cyan, #4ecdc4);
+}
+
+.p4-theme-happy .p4-ending-title {
+color: #ffffff;
+text-shadow: 3px 3px 0 #000, -2px 0 var(--fc-pink, #ff8fab);
+}
+
+.p4-ending-sub {
+margin: 0 0 22px;
+font-family: var(--fc-font);
+font-size: clamp(1rem, 1.8vw, 1.2rem);
+line-height: 1.5;
+}
+
+.p4-ending-collection {
+padding: 8px 18px;
+margin-bottom: 28px;
+font-family: var(--fc-font);
+font-size: 1rem;
+font-weight: 700;
+background: var(--fc-dk-panel, #2b1e34);
+color: var(--fc-yellow, #ffe680);
+border: 3px solid #000;
+box-shadow: 4px 4px 0 #000;
+border-radius: 0;
+}
+
+.p4-theme-happy .p4-ending-collection {
+background: #ffffff;
+color: #000000;
+}
+
+.p4-final-actions {
+display: flex;
+gap: 14px;
+flex-wrap: wrap;
+justify-content: center;
+}
+
+/* 재시작 버튼: 일반 엔딩(--fc-pink), 해피 엔딩(--fc-mint) */
+.p4-btn-restart {
+padding: 12px 24px;
+font-size: 1rem;
+background: var(--fc-pink, #ff9ebb);
+color: #000000;
+}
+
+.p4-theme-happy .p4-btn-restart {
+background: var(--fc-mint, #a8f0dc);
+color: #000000;
+}
+
+.p4-btn-secondary {
+padding: 12px 22px;
+font-size: 1rem;
+background: var(--fc-yellow, #ffe680);
+color: #000000;
+}
